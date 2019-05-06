@@ -1,0 +1,66 @@
+﻿@model Biblioteka_bazyDanych.wypozyczenia
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>wypozyczenia</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.data_zamowienia)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.data_zamowienia)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.data_wypozyczenia)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.data_wypozyczenia)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.data_zwrotu)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.data_zwrotu)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.status)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.status)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.czytelnicy.imie)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.czytelnicy.imie)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ksiazki.wydawnictwo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ksiazki.wydawnictwo)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.id_wypozyczenia }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

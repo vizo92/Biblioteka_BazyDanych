@@ -1,0 +1,67 @@
+﻿@model IEnumerable<Biblioteka_bazyDanych.autorzy>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Autorzy</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+@using (Html.BeginForm("Index", "Autorzy", FormMethod.Get))
+{
+    //the following are search options
+    <b> Wyszukaj wg elementu: </b>
+    @Html.DropDownList("option", null, htmlAttributes: new { @class = "form-controlSearch" })
+    @Html.TextBox("search", null, htmlAttributes: new { @class = "form-controlSearch" }) <input type="submit" name="submit" value="Szukaj" />
+}
+<br />
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.id_autora)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.imie)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.nazwisko)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.narodowosc)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.liczba_dziel)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.id_autora)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.imie)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.nazwisko)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.narodowosc)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.liczba_dziel)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.id_autora }) |
+                @Html.ActionLink("Details", "Details", new { id = item.id_autora }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.id_autora })
+            </td>
+        </tr>
+    }
+
+</table>

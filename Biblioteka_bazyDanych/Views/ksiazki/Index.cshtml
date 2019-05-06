@@ -1,0 +1,51 @@
+﻿@model IEnumerable<Biblioteka_bazyDanych.ksiazki>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Książki</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.tytul)
+        </th>
+        <th>
+            Autor
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.gatunek)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.wydawnictwo)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.tytul)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.autorzy.imie)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.gatunki.nazwa)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.wydawnictwa.nazwa)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.id_ksiazki }) |
+            @Html.ActionLink("Details", "Details", new { id=item.id_ksiazki }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.id_ksiazki })
+        </td>
+    </tr>
+}
+
+</table>

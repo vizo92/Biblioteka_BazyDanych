@@ -1,0 +1,57 @@
+﻿@model IEnumerable<Biblioteka_bazyDanych.czytelnicy>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Czytelnicy</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.imie)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.nazwisko)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.miastso)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ulica)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.liczba_ksiazek)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.imie)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.nazwisko)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.miastso)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ulica)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.liczba_ksiazek)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.id_czytelnika }) |
+            @Html.ActionLink("Details", "Details", new { id=item.id_czytelnika }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.id_czytelnika })
+        </td>
+    </tr>
+}
+
+</table>

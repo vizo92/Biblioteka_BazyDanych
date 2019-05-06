@@ -1,0 +1,50 @@
+﻿@model Biblioteka_bazyDanych.ksiazki
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>ksiazki</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.tytul)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.tytul)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.autorzy.imie)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.autorzy.imie)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.gatunki.nazwa)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.gatunki.nazwa)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.wydawnictwa.kraj)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.wydawnictwa.kraj)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.id_ksiazki }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
