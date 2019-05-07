@@ -128,6 +128,9 @@ namespace Biblioteka_bazyDanych.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.Read = ReadBooks((int)id);
+            ViewBag.Reserved = ReservedBooks((int)id);
+            ViewBag.Borrowed = BorrowedBooks((int)id);
             return View(czytelnicy);
         }
 
@@ -220,6 +223,19 @@ namespace Biblioteka_bazyDanych.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        public int ReadBooks(int id)
+        {
+            return db.wypozyczenia.Where(x => x.id_czytelnika == id).Where(x => x.status == "Zwrócone").Select(x => x.id_wypozyczenia).Count();
+        }
+        public int ReservedBooks(int id)
+        {
+            return db.wypozyczenia.Where(x => x.id_czytelnika == id).Where(x => x.status == "Zarezerwowane").Select(x => x.id_wypozyczenia).Count();     
+        }
+        public int BorrowedBooks(int id)
+        {
+            return db.wypozyczenia.Where(x => x.id_czytelnika == id).Where(x => x.status == "Wypożyczone").Select(x => x.id_wypozyczenia).Count();
         }
     }
 }

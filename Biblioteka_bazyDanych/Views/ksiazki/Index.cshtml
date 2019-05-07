@@ -84,13 +84,15 @@
                     @Html.DisplayFor(modelItem => item.tytul)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.autorzy.imie) @Html.DisplayFor(modelItem => item.autorzy.nazwisko)
+                    @Html.ActionLink(item.autorzy.imie +" "+item.autorzy.nazwisko, "Details", "autorzy", new { id = item.id_autora }, null)
+
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.gatunki.nazwa)
+                    
+                    @Html.ActionLink(item.gatunek, "Details", "autorzy", new { id = item.gatunek }, null)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.wydawnictwa.nazwa)
+                    @Html.ActionLink(item.wydawnictwo, "Details", "autorzy", new { id = item.wydawnictwo }, null)
                 </td>
                 <td>
                     @Html.ActionLink("Edit", "Edit", new { id = item.id_ksiazki }) |

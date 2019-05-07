@@ -1,4 +1,7 @@
-﻿@model Biblioteka_bazyDanych.ksiazki
+﻿@using PagedList
+@using PagedList.Mvc
+@model Biblioteka_bazyDanych.ksiazki
+   
 
 @{
     ViewBag.Title = "Details";
@@ -42,7 +45,115 @@
             @Html.DisplayFor(model => model.wydawnictwa.kraj)
         </dd>
 
+
     </dl>
+
+    <h3>Historia wypożyczeń</h3>
+
+    @if (Model.wypozyczenia.Count() == 0)
+    {
+
+        <h5>Książka nie była jeszcze wypożyczana.</h5>
+
+    }
+    else
+    {
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.ActionLink("ID", "Index", new
+               {
+                   sort = ViewBag.SortByID,
+                   option = Request.QueryString["option"],
+                   search = Request.QueryString["search"]
+               })
+                </th>
+                <th>
+                    @Html.ActionLink("Data zamówienia", "Index", new
+               {
+                   sort = ViewBag.SortByDateOrder,
+                   option = Request.QueryString["option"],
+                   search = Request.QueryString["search"]
+               })
+                </th>
+                <th>
+                    @Html.ActionLink("Data wypożyczenia", "Index", new
+               {
+                   sort = ViewBag.SortByDateWith,
+                   option = Request.QueryString["option"],
+                   search = Request.QueryString["search"]
+               })
+                </th>
+                <th>
+                    @Html.ActionLink("Data zwrotu", "Index", new
+               {
+                   sort = ViewBag.SortByDateTake,
+                   option = Request.QueryString["option"],
+                   search = Request.QueryString["search"]
+               })
+                </th>
+                <th>
+                    @Html.ActionLink("Status", "Index", new
+               {
+                   sort = ViewBag.SortByStatus,
+                   option = Request.QueryString["option"],
+                   search = Request.QueryString["search"]
+               })
+                </th>
+                <th>
+                    @Html.ActionLink("Czytelnik", "Index", new
+               {
+                   sort = ViewBag.SortByReader,
+                   option = Request.QueryString["option"],
+                   search = Request.QueryString["search"]
+               })
+                </th>
+                <th>
+                    @Html.ActionLink("Książka", "Index", new
+               {
+                   sort = ViewBag.SortByBook,
+                   option = Request.QueryString["option"],
+                   search = Request.QueryString["search"]
+               })
+                </th>
+                <th></th>
+            </tr>
+
+
+            @foreach (var item in Model.wypozyczenia)
+            {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.id_wypozyczenia)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.data_zamowienia)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.data_wypozyczenia)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.data_zwrotu)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.status)
+            </td>
+            <td>
+                @Html.ActionLink(item.czytelnicy.imie + " " + item.czytelnicy.nazwisko, "Details", "czytelnicy", new { id = item.id_czytelnika }, null)
+            </td>
+            <td>
+                @Html.ActionLink(item.ksiazki.tytul, "Details", "ksiazki", new { id = item.id_ksiazki }, null)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.id_wypozyczenia }) |
+                @Html.ActionLink("Details", "Details", new { id = item.id_wypozyczenia }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.id_wypozyczenia })
+            </td>
+        </tr>
+
+            }
+        </table>
+    }
 </div>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.id_ksiazki }) |

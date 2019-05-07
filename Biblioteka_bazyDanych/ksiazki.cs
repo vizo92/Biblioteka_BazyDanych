@@ -35,6 +35,7 @@ namespace Biblioteka_bazyDanych
         public virtual autorzy autorzy { get; set; }
         public virtual gatunki gatunki { get; set; }
         public virtual wydawnictwa wydawnictwa { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<wypozyczenia> wypozyczenia { get; set; }
     }

@@ -36,10 +36,5 @@ namespace Biblioteka_bazyDanych
         public virtual czytelnicy czytelnicy { get; set; }
         public virtual ksiazki ksiazki { get; set; }
 
-        public string GetDate(Nullable<DateTime> date)
-        {
-            var date2 = (DateTime)date;
-            return date2.Date.ToString();
-        }
     }
 }

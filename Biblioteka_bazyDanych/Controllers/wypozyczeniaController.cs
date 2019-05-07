@@ -157,7 +157,7 @@ namespace Biblioteka_bazyDanych.Controllers
 
             List<SelectListItem> statusList = new List<SelectListItem>();
             var data = new[]{
-                 new SelectListItem{ Value="Zamówione",Text="Zamówione"},
+                 new SelectListItem{ Value="Zarezerwowane",Text="Zarezerwowane"},
                  new SelectListItem{ Value="Wypożyczone",Text="Wypożyczone"},
                  new SelectListItem{ Value="Zwrócone",Text="Zwrócone"},
              };
@@ -179,6 +179,9 @@ namespace Biblioteka_bazyDanych.Controllers
             if (ModelState.IsValid)
             {
                 db.wypozyczenia.Add(wypozyczenia);
+                var addBook = db.czytelnicy.Where(x => x.id_czytelnika == wypozyczenia.id_czytelnika).FirstOrDefault();
+                addBook.liczba_ksiazek = db.wypozyczenia.Where(x => x.id_czytelnika == addBook.id_czytelnika).Where(x=> x.status == "Wypozyczone").Select(x => x.id_wypozyczenia).Count();
+                db.Entry(addBook).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -202,7 +205,7 @@ namespace Biblioteka_bazyDanych.Controllers
             }
             List<SelectListItem> statusList = new List<SelectListItem>();
             var data = new[]{
-                 new SelectListItem{ Value="Zamówione",Text="Zamówione"},
+                 new SelectListItem{ Value="Zarezerwowane",Text="Zarezerwowane"},
                  new SelectListItem{ Value="Wypożyczone",Text="Wypożyczone"},
                  new SelectListItem{ Value="Zwrócone",Text="Zwrócone"},
              };

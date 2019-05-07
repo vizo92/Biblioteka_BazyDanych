@@ -109,10 +109,10 @@
                     @Html.DisplayFor(modelItem => item.status)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.czytelnicy.imie) @Html.DisplayFor(modelItem => item.czytelnicy.nazwisko)
+                    @Html.ActionLink(item.czytelnicy.imie + " " + item.czytelnicy.nazwisko, "Details", "czytelnicy", new { id = item.id_czytelnika }, null)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.ksiazki.tytul)
+                    @Html.ActionLink(item.ksiazki.tytul, "Details", "ksiazki", new { id = item.id_ksiazki }, null)
                 </td>
                 <td>
                     @Html.ActionLink("Edit", "Edit", new { id = item.id_wypozyczenia }) |
