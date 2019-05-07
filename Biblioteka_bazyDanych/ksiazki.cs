@@ -24,7 +24,7 @@ namespace Biblioteka_bazyDanych
         [Display(Name = "ID")]
         public int id_ksiazki { get; set; }
         [Display(Name = "Autor")]
-        public Nullable<int> id_autora { get; set; }
+        public int id_autora { get; set; }
         [Display(Name = "Wydawnictwo")]
         public string wydawnictwo { get; set; }
         [Display(Name = "Gatunek")]

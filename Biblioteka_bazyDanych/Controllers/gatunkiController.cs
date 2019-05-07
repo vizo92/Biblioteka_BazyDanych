@@ -7,6 +7,8 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Biblioteka_bazyDanych;
+using PagedList;
+using PagedList.Mvc;
 
 namespace Biblioteka_bazyDanych.Controllers
 {
@@ -15,9 +17,40 @@ namespace Biblioteka_bazyDanych.Controllers
         private bibliotekaEntities1 db = new bibliotekaEntities1();
 
         // GET: gatunki
-        public ActionResult Index()
+        public ActionResult Index(string option, string search, int? page, string sort)
         {
-            return View(db.gatunki.ToList());
+            List<SelectListItem> searchOptions = new List<SelectListItem>();
+            var data = new[]{
+                 new SelectListItem{ Value="",Text=""},
+                 new SelectListItem{ Value="Nazwa" ,Text="Nazwa"},
+             };
+            searchOptions = data.ToList();
+
+            ViewBag.option = searchOptions;
+
+            ViewBag.SortByName = string.IsNullOrEmpty(sort) ? "descending name" : "";
+
+            //here we are converting the db.autorzy to AsQueryable so that we can invoke all the extension methods on variable records.  
+            var records = db.gatunki.AsQueryable();
+
+            if (option == "Nazwa")
+            {
+                records = records.Where(x => x.nazwa == search || search == null);
+            }
+
+            switch (sort)
+            {
+                case "descending name":
+                    records = records.OrderByDescending(x => x.nazwa);
+                    break;
+
+                default:
+                    records = records.OrderBy(x => x.nazwa);
+                    break;
+
+            }
+            return View(records.ToPagedList(page ?? 1, 10));
+
         }
 
         // GET: gatunki/Details/5

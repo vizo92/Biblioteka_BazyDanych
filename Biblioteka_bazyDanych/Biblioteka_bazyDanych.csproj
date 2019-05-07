@@ -260,6 +260,7 @@
     <Content Include="Views\wypozyczenia\Details.cshtml" />
     <Content Include="Views\wypozyczenia\Edit.cshtml" />
     <Content Include="Views\wypozyczenia\Index.cshtml" />
+    <Content Include="Views\Shared\DeleteError.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

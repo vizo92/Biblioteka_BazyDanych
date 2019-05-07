@@ -1,0 +1,18 @@
+﻿
+@{
+    ViewBag.Title = "DeleteError";
+}
+
+<h2>Błąd.</h2>
+
+<h2>Nie można usunąć obiektu używanego przez inną tabelę w bazie.</h2>
+
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }

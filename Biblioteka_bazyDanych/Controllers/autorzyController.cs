@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using Biblioteka_bazyDanych;
 using PagedList;
 using PagedList.Mvc;
+using System.Data.SqlClient;
 
 namespace Biblioteka_bazyDanych.Controllers
 {
@@ -218,10 +219,21 @@ namespace Biblioteka_bazyDanych.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            autorzy autorzy = db.autorzy.Find(id);
-            db.autorzy.Remove(autorzy);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            try
+            {
+                autorzy autorzy = db.autorzy.Find(id);
+                db.autorzy.Remove(autorzy);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            catch (SqlException ex)
+            {
+                return View("DeleteError");
+            }
+            catch (Exception ex)
+            {
+                return View("DeleteError");
+            }
         }
 
         protected override void Dispose(bool disposing)

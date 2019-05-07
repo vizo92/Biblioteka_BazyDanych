@@ -7,6 +7,8 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Biblioteka_bazyDanych;
+using PagedList;
+using PagedList.Mvc;
 
 namespace Biblioteka_bazyDanych.Controllers
 {
@@ -15,10 +17,117 @@ namespace Biblioteka_bazyDanych.Controllers
         private bibliotekaEntities1 db = new bibliotekaEntities1();
 
         // GET: wypozyczenia
-        public ActionResult Index()
+
+        public ActionResult Index(string option, string search, int? page, string sort)
         {
-            var wypozyczenia = db.wypozyczenia.Include(w => w.czytelnicy).Include(w => w.ksiazki);
-            return View(wypozyczenia.ToList());
+            List<SelectListItem> searchOptions = new List<SelectListItem>();
+            var data = new[]{
+                 new SelectListItem{ Value="",Text=""},
+                 new SelectListItem{ Value="DataZamowienia" ,Text="Data Zamówienia"},
+                 new SelectListItem{ Value="DataWypozyczenia",Text="Data Wypożyczenia"},
+                 new SelectListItem{ Value="DataZwrotu",Text="Data Zwrotu"},
+                 new SelectListItem{ Value="Status",Text="Status"},
+                 new SelectListItem{ Value="Czytelnik",Text="Czytelnik"},
+                 new SelectListItem{ Value="Książka",Text="Książka"},
+             };
+            searchOptions = data.ToList();
+
+            ViewBag.option = searchOptions;
+
+            ViewBag.SortByID = string.IsNullOrEmpty(sort) ? "descending id" : "";
+            ViewBag.SortByDateOrder = sort == "Data Zamówienia" ? "descending zamowienia" : "Data Zamówienia";
+            ViewBag.SortByDateWith = sort == "Data Wypożyczenia" ? "descending wypozyczenia" : "Data Wypożyczenia";
+            ViewBag.SortByDateTake = sort == "Data Zwrotu" ? "descending zwrotu" : "Data Zwrotu";
+            ViewBag.SortByStatus = sort == "Status" ? "descending status" : "Status";
+            ViewBag.SortByReader = sort == "Czytelnik" ? "descending czytelnik" : "Czytelnik";
+            ViewBag.SortByBook = sort == "Książka" ? "descending ksiazka" : "Książka";
+
+            //here we are converting the db.autorzy to AsQueryable so that we can invoke all the extension methods on variable records.  
+            var records = db.wypozyczenia.Include(w => w.czytelnicy).Include(w => w.ksiazki).AsQueryable();
+
+            if (option == "DataZamowienia")
+            {
+                records = records.Where(x => x.data_zamowienia.ToString() == search || search == null);
+            }
+            else if (option == "Czytelnik")
+            {
+                records = records.Where(x => x.czytelnicy.imie + " " + x.czytelnicy.nazwisko == search || x.czytelnicy.nazwisko == search || x.czytelnicy.imie == search || search == null);
+            }
+            else if (option == "DataWypozyczenia")
+            {
+                records = records.Where(x => x.data_wypozyczenia.ToString() == search || search == null);
+            }
+            else if (option == "DataZwrotu")
+            {
+                records = records.Where(x => x.data_zwrotu.ToString() == search || search == null);
+            }
+            else if (option == "Książka")
+            {
+                records = records.Where(x => x.ksiazki.tytul == search || search == null);
+            }
+            else if (option == "Status")
+            {
+                records = records.Where(x => x.status == search || search == null);
+            }
+
+            switch (sort)
+            {
+                case "descending id":
+                    records = records.OrderByDescending(x => x.id_wypozyczenia);
+                    break;
+
+                case "descending zamowienia":
+                    records = records.OrderByDescending(x => x.data_zamowienia);
+                    break;
+
+                case "Data Zamówienia":
+                    records = records.OrderBy(x => x.data_zamowienia);
+                    break;
+
+                case "descending wypozyczenia":
+                    records = records.OrderByDescending(x => x.data_wypozyczenia);
+                    break;
+
+                case "Data Wypożyczenia":
+                    records = records.OrderBy(x => x.data_wypozyczenia);
+                    break;
+
+                case "descending zwrotu":
+                    records = records.OrderByDescending(x => x.data_zwrotu);
+                    break;
+
+                case "Data Zwrotu":
+                    records = records.OrderBy(x => x.data_zwrotu);
+                    break;
+
+                case "descending status":
+                    records = records.OrderByDescending(x => x.status);
+                    break;
+
+                case "Status":
+                    records = records.OrderBy(x => x.status);
+                    break;
+                case "descending ksiazka":
+                    records = records.OrderByDescending(x => x.ksiazki.tytul);
+                    break;
+
+                case "Książka":
+                    records = records.OrderBy(x => x.ksiazki.tytul);
+                    break;
+                case "descending czytelnik":
+                    records = records.OrderByDescending(x => x.czytelnicy.nazwisko).ThenBy(x => x.czytelnicy.imie);
+                    break;
+
+                case "Czytelnik":
+                    records = records.OrderBy(x => x.czytelnicy.nazwisko).ThenBy(x=>x.czytelnicy.imie);
+                    break;
+                default:
+                    records = records.OrderBy(x => x.id_wypozyczenia);
+                    break;
+
+            }
+            return View(records.ToPagedList(page ?? 1, 10));
+
         }
 
         // GET: wypozyczenia/Details/5

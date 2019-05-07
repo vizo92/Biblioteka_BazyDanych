@@ -7,6 +7,8 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Biblioteka_bazyDanych;
+using PagedList;
+using PagedList.Mvc;
 
 namespace Biblioteka_bazyDanych.Controllers
 {
@@ -15,10 +17,91 @@ namespace Biblioteka_bazyDanych.Controllers
         private bibliotekaEntities1 db = new bibliotekaEntities1();
 
         // GET: ksiazki
-        public ActionResult Index()
+
+        public ActionResult Index(string option, string search, int? page, string sort)
         {
-            var ksiazki = db.ksiazki.Include(k => k.autorzy).Include(k => k.gatunki).Include(k => k.wydawnictwa);
-            return View(ksiazki.ToList());
+            List<SelectListItem> searchOptions = new List<SelectListItem>();
+            var data = new[]{
+                 new SelectListItem{ Value="",Text=""},
+                 new SelectListItem{ Value="Tytul" ,Text="Tytuł"},
+                 new SelectListItem{ Value="Autor",Text="Autor"},
+                 new SelectListItem{ Value="Gatunek",Text="Gatunek"},
+                 new SelectListItem{ Value="Wydawnictwo",Text="Wydawnictwo"},
+             };
+            searchOptions = data.ToList();
+
+            ViewBag.option = searchOptions;
+
+            ViewBag.SortByID = string.IsNullOrEmpty(sort) ? "descending id" : "";
+            ViewBag.SortByTitle = sort == "Tytul" ? "descending tytul" : "Tytul";
+            ViewBag.SortByAuthor = sort == "Autor" ? "descending autor" : "Autor";
+            ViewBag.SortByKind = sort == "Gatunek" ? "descending gatunek" : "Gatunek";
+            ViewBag.SortByPress = sort == "Wydawnictwo" ? "descending wydawnictwo" : "Wydawnictwo";
+
+            //here we are converting the db.autorzy to AsQueryable so that we can invoke all the extension methods on variable records.  
+            var records = db.ksiazki.Include(k => k.autorzy).Include(k => k.gatunki).Include(k => k.wydawnictwa).AsQueryable();
+
+            if (option == "Tytul")
+            {
+                records = records.Where(x => x.tytul == search || search == null);
+            }
+            else if (option == "Autor")
+            {
+                records = records.Where(x => x.autorzy.imie + " "+x.autorzy.nazwisko == search || x.autorzy.nazwisko == search || x.autorzy.imie == search || search == null);
+            }
+            else if (option == "Gatunek")
+            {
+                records = records.Where(x => x.gatunek == search || search == null);
+            }
+            else if (option == "Wydawnictwo")
+            {
+                records = records.Where(x => x.wydawnictwo == search || search == null);
+            }
+
+            switch (sort)
+            {
+                case "descending id":
+                    records = records.OrderByDescending(x => x.id_ksiazki);
+                    break;
+
+                case "descending tytul":
+                    records = records.OrderByDescending(x => x.tytul);
+                    break;
+
+                case "Tytul":
+                    records = records.OrderBy(x => x.tytul);
+                    break;
+
+                case "descending autor":
+                    records = records.OrderByDescending(x => x.autorzy.nazwisko).ThenBy(x => x.autorzy.imie);
+                    break;
+
+                case "Autor":
+                    records = records.OrderBy(x => x.autorzy.nazwisko).ThenBy(x => x.autorzy.imie);
+                    break;
+
+                case "descending gatunek":
+                    records = records.OrderByDescending(x => x.gatunek);
+                    break;
+
+                case "Gatunek":
+                    records = records.OrderBy(x => x.gatunek);
+                    break;
+
+                case "descending wydawnictwo":
+                    records = records.OrderByDescending(x => x.wydawnictwo);
+                    break;
+
+                case "Wydawnictwo":
+                    records = records.OrderBy(x => x.wydawnictwo);
+                    break;
+                default:
+                    records = records.OrderBy(x => x.id_ksiazki);
+                    break;
+
+            }
+            return View(records.ToPagedList(page ?? 1, 10));
+
         }
 
         // GET: ksiazki/Details/5
