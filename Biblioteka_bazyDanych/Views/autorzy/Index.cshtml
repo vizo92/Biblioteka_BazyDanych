@@ -1,4 +1,8 @@
-﻿@model IEnumerable<Biblioteka_bazyDanych.autorzy>
+﻿@using PagedList;
+
+@using PagedList.Mvc;
+
+@model IPagedList<Biblioteka_bazyDanych.autorzy>
 
 @{
     ViewBag.Title = "Index";
@@ -17,51 +21,95 @@
     @Html.DropDownList("option", null, htmlAttributes: new { @class = "form-controlSearch" })
     @Html.TextBox("search", null, htmlAttributes: new { @class = "form-controlSearch" }) <input type="submit" name="submit" value="Szukaj" />
 }
+
 <br />
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.id_autora)
+            <!-- As "ID" or "Imię" we can also use variables for different languages-->
+            @Html.ActionLink("ID", "Index", new
+            {
+                sort = ViewBag.SortByID,
+                option = Request.QueryString["option"],
+                search = Request.QueryString["search"]
+            })
+            <!--Html.DisplayNameFor(model => model.First().id_autora)-->
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.imie)
+            @Html.ActionLink("Imię", "Index", new
+            {
+                sort = ViewBag.SortByName,
+                option = Request.QueryString["option"],
+                search = Request.QueryString["search"]
+            })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.nazwisko)
+            @Html.ActionLink("Nazwisko", "Index", new
+            {
+                sort = ViewBag.SortBySurname,
+                option = Request.QueryString["option"],
+                search = Request.QueryString["search"]
+            })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.narodowosc)
+            @Html.ActionLink("Narodowość", "Index", new
+            {
+                sort = ViewBag.SortByNationality,
+                option = Request.QueryString["option"],
+                search = Request.QueryString["search"]
+            })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.liczba_dziel)
+            @Html.ActionLink("Liczba Dzieł", "Index", new
+            {
+                sort = ViewBag.SortByBooks,
+                option = Request.QueryString["option"],
+                search = Request.QueryString["search"]
+            })
         </th>
         <th></th>
     </tr>
 
-    @foreach (var item in Model)
+    @if (Model.Count() == 0)
     {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.id_autora)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.imie)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.nazwisko)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.narodowosc)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.liczba_dziel)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.id_autora }) |
-                @Html.ActionLink("Details", "Details", new { id = item.id_autora }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.id_autora })
-            </td>
+            <td colspan="6"> Brak wyników pasujących do kryterium wyszukiwania </td>
         </tr>
     }
+    else
+    {
 
+        foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.id_autora)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.imie)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.nazwisko)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.narodowosc)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.liczba_dziel)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.id_autora }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.id_autora }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.id_autora })
+                </td>
+            </tr>
+        }
+    }
 </table>
+@Html.PagedListPager(Model, page => Url.Action("Index", new
+{
+page,
+option = Request.QueryString["option"],  
+search = Request.QueryString["search"],
+sort = Request.QueryString["sort"]  
+}))
