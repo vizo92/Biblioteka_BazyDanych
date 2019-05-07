@@ -145,15 +145,18 @@ namespace Biblioteka_bazyDanych.Controllers
             if (ModelState.IsValid)
             {
                 db.ksiazki.Add(ksiazki);
+                UpdateBooksCount(ksiazki.id_autora);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+
 
             ViewBag.id_autora = new SelectList(db.autorzy, "id_autora", "imie", ksiazki.id_autora);
             ViewBag.gatunek = new SelectList(db.gatunki, "nazwa", "nazwa", ksiazki.gatunek);
             ViewBag.wydawnictwo = new SelectList(db.wydawnictwa, "nazwa", "nazwa", ksiazki.wydawnictwo);
             return View(ksiazki);
         }
+
 
         // GET: ksiazki/Edit/5
         public ActionResult Edit(int? id)
@@ -180,12 +183,17 @@ namespace Biblioteka_bazyDanych.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "id_ksiazki,id_autora,wydawnictwo,gatunek,tytul")] ksiazki ksiazki)
         {
+
             if (ModelState.IsValid)
             {
                 db.Entry(ksiazki).State = EntityState.Modified;
+                UpdateBooksCount(ksiazki.id_autora);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+
+           
+                
             ViewBag.id_autora = new SelectList(db.autorzy, "id_autora", "imie", ksiazki.id_autora);
             ViewBag.gatunek = new SelectList(db.gatunki, "nazwa", "nazwa", ksiazki.gatunek);
             ViewBag.wydawnictwo = new SelectList(db.wydawnictwa, "nazwa", "kraj", ksiazki.wydawnictwo);
@@ -214,6 +222,7 @@ namespace Biblioteka_bazyDanych.Controllers
         {
             ksiazki ksiazki = db.ksiazki.Find(id);
             db.ksiazki.Remove(ksiazki);
+            UpdateBooksCount(ksiazki.id_autora);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
@@ -225,6 +234,13 @@ namespace Biblioteka_bazyDanych.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        public void UpdateBooksCount(int id_autora)
+        {
+            var modifyAuthor = db.autorzy.Where(x => x.id_autora == id_autora).FirstOrDefault();
+            modifyAuthor.liczba_dziel = db.ksiazki.Where(x => x.id_autora == modifyAuthor.id_autora).Select(x => x.id_ksiazki).Count();
+            db.Entry(modifyAuthor).State = EntityState.Modified;
         }
     }
 }

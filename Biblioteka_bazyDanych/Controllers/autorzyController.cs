@@ -160,6 +160,7 @@ namespace Biblioteka_bazyDanych.Controllers
         {
             if (ModelState.IsValid)
             {
+                autorzy.liczba_dziel = 0;
                 db.autorzy.Add(autorzy);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -192,6 +193,7 @@ namespace Biblioteka_bazyDanych.Controllers
         {
             if (ModelState.IsValid)
             {
+                autorzy.liczba_dziel = db.ksiazki.Where(x => x.id_autora == autorzy.id_autora).Select(x => x.id_ksiazki).Count();
                 db.Entry(autorzy).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -226,11 +228,11 @@ namespace Biblioteka_bazyDanych.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            catch (SqlException ex)
+            catch (SqlException)
             {
                 return View("DeleteError");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return View("DeleteError");
             }

@@ -146,6 +146,7 @@ namespace Biblioteka_bazyDanych.Controllers
         {
             if (ModelState.IsValid)
             {
+                czytelnicy.liczba_ksiazek = 0;
                 db.czytelnicy.Add(czytelnicy);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -178,6 +179,7 @@ namespace Biblioteka_bazyDanych.Controllers
         {
             if (ModelState.IsValid)
             {
+                czytelnicy.liczba_ksiazek = db.wypozyczenia.Where(x => x.id_czytelnika == czytelnicy.id_czytelnika).Where(x=>x.status == "Wypożyczone").Select(x => x.id_ksiazki).Count();
                 db.Entry(czytelnicy).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
