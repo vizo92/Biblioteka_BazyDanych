@@ -131,7 +131,7 @@ namespace Biblioteka_bazyDanych.Controllers
         }
 
         // GET: autorzy/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details(int? id, string sort)
         {
             if (id == null)
             {

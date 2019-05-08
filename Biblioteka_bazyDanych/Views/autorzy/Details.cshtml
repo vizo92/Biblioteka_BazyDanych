@@ -52,6 +52,63 @@
 
     </dl>
 </div>
+
+<h3>Lista książek</h3>
+
+@if (Model.ksiazki.Count() == 0)
+{
+
+    <h5>Autor nie napisał jeszcze książki ;-)</h5>
+
+}
+
+
+
+else
+{
+<table class="table">
+    <tr>
+        <th>
+            ID
+        </th>
+        <th>
+            Tytuł
+        </th>
+        <th>
+            Autor
+        </th>
+        <th>
+            Gatunek
+        </th>
+        <th>
+            Wydawnictwo
+        </th>
+    </tr>
+    @foreach (var item in Model.ksiazki)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.id_ksiazki)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.tytul)
+            </td>
+            <td>
+                @Html.ActionLink(item.autorzy.imie + " " + item.autorzy.nazwisko, "Details", "autorzy", new { id = item.id_autora }, null)
+
+            </td>
+            <td>
+
+                @Html.ActionLink(item.gatunek, "Details", "gatunki", new { id = item.gatunek }, null)
+            </td>
+            <td>
+                @Html.ActionLink(item.wydawnictwo, "Details", "wydawnictwa", new { id = item.wydawnictwo }, null)
+            </td>
+        </tr>
+    }
+</table>
+}
+
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.id_autora }) |
     @Html.ActionLink("Back to List", "Index")

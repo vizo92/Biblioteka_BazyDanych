@@ -61,62 +61,26 @@
         <table class="table">
             <tr>
                 <th>
-                    @Html.ActionLink("ID", "Index", new
-               {
-                   sort = ViewBag.SortByID,
-                   option = Request.QueryString["option"],
-                   search = Request.QueryString["search"]
-               })
+                    ID
                 </th>
                 <th>
-                    @Html.ActionLink("Data zamówienia", "Index", new
-               {
-                   sort = ViewBag.SortByDateOrder,
-                   option = Request.QueryString["option"],
-                   search = Request.QueryString["search"]
-               })
+                    Data zamówienia
                 </th>
                 <th>
-                    @Html.ActionLink("Data wypożyczenia", "Index", new
-               {
-                   sort = ViewBag.SortByDateWith,
-                   option = Request.QueryString["option"],
-                   search = Request.QueryString["search"]
-               })
+                    Data wypożyczenia
                 </th>
                 <th>
-                    @Html.ActionLink("Data zwrotu", "Index", new
-               {
-                   sort = ViewBag.SortByDateTake,
-                   option = Request.QueryString["option"],
-                   search = Request.QueryString["search"]
-               })
+                    Data zwrotu
                 </th>
                 <th>
-                    @Html.ActionLink("Status", "Index", new
-               {
-                   sort = ViewBag.SortByStatus,
-                   option = Request.QueryString["option"],
-                   search = Request.QueryString["search"]
-               })
+                    Status
                 </th>
                 <th>
-                    @Html.ActionLink("Czytelnik", "Index", new
-               {
-                   sort = ViewBag.SortByReader,
-                   option = Request.QueryString["option"],
-                   search = Request.QueryString["search"]
-               })
+                    Czytelnik
                 </th>
                 <th>
-                    @Html.ActionLink("Książka", "Index", new
-               {
-                   sort = ViewBag.SortByBook,
-                   option = Request.QueryString["option"],
-                   search = Request.QueryString["search"]
-               })
+                    Książka
                 </th>
-                <th></th>
             </tr>
 
 
@@ -143,11 +107,6 @@
             </td>
             <td>
                 @Html.ActionLink(item.ksiazki.tytul, "Details", "ksiazki", new { id = item.id_ksiazki }, null)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.id_wypozyczenia }) |
-                @Html.ActionLink("Details", "Details", new { id = item.id_wypozyczenia }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.id_wypozyczenia })
             </td>
         </tr>
 

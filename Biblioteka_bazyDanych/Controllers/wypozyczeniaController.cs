@@ -18,7 +18,7 @@ namespace Biblioteka_bazyDanych.Controllers
 
         // GET: wypozyczenia
 
-        public ActionResult Index(string option, string search, int? page, string sort)
+        public ActionResult Index(string option, DateTime? option1, DateTime? option2, string search, int? page, string sort)
         {
             List<SelectListItem> searchOptions = new List<SelectListItem>();
             var data = new[]{
@@ -69,6 +69,11 @@ namespace Biblioteka_bazyDanych.Controllers
             {
                 records = records.Where(x => x.status == search || search == null);
             }
+            else if (option1.ToString().Length > 0 & option2.ToString().Length > 0)
+            {
+                records = records.Where(x => x.data_zamowienia >= option1).Where(x => x.data_zamowienia <= option2);
+            }
+
 
             switch (sort)
             {

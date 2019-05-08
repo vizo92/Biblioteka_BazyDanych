@@ -50,6 +50,8 @@ namespace Biblioteka_bazyDanych.Controllers
                 records = records.Where(x => x.kraj == search || search == null);
             }
 
+       
+
 
             switch (sort)
             {

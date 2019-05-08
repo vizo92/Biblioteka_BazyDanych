@@ -21,6 +21,15 @@
     @Html.TextBox("search", null, htmlAttributes: new { @class = "form-controlSearch" }) <input type="submit" name="submit" value="Szukaj" />
 }
 <br />
+@using (Html.BeginForm("Index", "Wypozyczenia", FormMethod.Get))
+{
+    //the following are search options
+    <b> Wyszukaj wg daty pomiędzy: </b>
+    @Html.TextBox("option1", "{date:dd/MM/yyyy}", new { type = "date", @class = "form-controlSearch" })
+    <span>a</span> @Html.TextBox("option2", "{date:dd/MM/yyyy}", new { type = "date", @class = "form-controlSearch" })
+    <input type="submit" name="submit" value="Szukaj" />
+}
+<br />
 <table class="table">
     <tr>
         <th>
@@ -28,6 +37,8 @@
                 {
                     sort = ViewBag.SortByID,
                     option = Request.QueryString["option"],
+                    option1 = Request.QueryString["option1"],
+                    option2 = Request.QueryString["option2"],
                     search = Request.QueryString["search"]
                 })
         </th>
@@ -36,6 +47,8 @@
                 {
                     sort = ViewBag.SortByDateOrder,
                     option = Request.QueryString["option"],
+                    option1 = Request.QueryString["option1"],
+                    option2 = Request.QueryString["option2"],
                     search = Request.QueryString["search"]
                 })
         </th>
@@ -44,6 +57,8 @@
                 {
                     sort = ViewBag.SortByDateWith,
                     option = Request.QueryString["option"],
+                    option1 = Request.QueryString["option1"],
+                    option2 = Request.QueryString["option2"],
                     search = Request.QueryString["search"]
                 })
         </th>
@@ -52,6 +67,8 @@
                 {
                     sort = ViewBag.SortByDateTake,
                     option = Request.QueryString["option"],
+                    option1 = Request.QueryString["option1"],
+                    option2 = Request.QueryString["option2"],
                     search = Request.QueryString["search"]
                 })
         </th>
@@ -60,6 +77,8 @@
                 {
                     sort = ViewBag.SortByStatus,
                     option = Request.QueryString["option"],
+                    option1 = Request.QueryString["option1"],
+                    option2 = Request.QueryString["option2"],
                     search = Request.QueryString["search"]
                 })
         </th>
@@ -68,6 +87,8 @@
                 {
                     sort = ViewBag.SortByReader,
                     option = Request.QueryString["option"],
+                    option1 = Request.QueryString["option1"],
+                    option2 = Request.QueryString["option2"],
                     search = Request.QueryString["search"]
                 })
         </th>
@@ -76,6 +97,8 @@
                 {
                     sort = ViewBag.SortByBook,
                     option = Request.QueryString["option"],
+                    option1 = Request.QueryString["option1"],
+                    option2 = Request.QueryString["option2"],
                     search = Request.QueryString["search"]
                 })
         </th>
