@@ -4,15 +4,15 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="bibliotekaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="bibliotekaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="autorzy">
           <Key>
             <PropertyRef Name="id_autora" />
           </Key>
           <Property Name="id_autora" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="imie" Type="varchar" MaxLength="50" />
-          <Property Name="nazwisko" Type="varchar" MaxLength="50" />
-          <Property Name="narodowosc" Type="varchar" MaxLength="50" />
+          <Property Name="imie" Type="nvarchar" MaxLength="50" />
+          <Property Name="nazwisko" Type="nvarchar" MaxLength="50" />
+          <Property Name="narodowosc" Type="nvarchar" MaxLength="50" />
           <Property Name="liczba_dziel" Type="int" />
           <Property Name="zyciorys" Type="text" />
         </EntityType>
@@ -21,17 +21,17 @@
             <PropertyRef Name="id_czytelnika" />
           </Key>
           <Property Name="id_czytelnika" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="imie" Type="varchar" MaxLength="50" />
-          <Property Name="nazwisko" Type="varchar" MaxLength="50" />
-          <Property Name="miastso" Type="varchar" MaxLength="50" />
-          <Property Name="ulica" Type="varchar" MaxLength="50" />
+          <Property Name="imie" Type="nvarchar" MaxLength="50" />
+          <Property Name="nazwisko" Type="nvarchar" MaxLength="50" />
+          <Property Name="miastso" Type="nvarchar" MaxLength="50" />
+          <Property Name="ulica" Type="nvarchar" MaxLength="50" />
           <Property Name="liczba_ksiazek" Type="int" />
         </EntityType>
         <EntityType Name="gatunki">
           <Key>
             <PropertyRef Name="nazwa" />
           </Key>
-          <Property Name="nazwa" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="nazwa" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="ksiazki">
           <Key>
@@ -39,9 +39,10 @@
           </Key>
           <Property Name="id_ksiazki" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="id_autora" Type="int" />
-          <Property Name="wydawnictwo" Type="varchar" MaxLength="50" />
-          <Property Name="gatunek" Type="varchar" MaxLength="50" />
-          <Property Name="tytul" Type="varchar" MaxLength="50" />
+          <Property Name="wydawnictwo" Type="nvarchar" MaxLength="50" />
+          <Property Name="gatunek" Type="nvarchar" MaxLength="50" />
+          <Property Name="tytul" Type="nvarchar" MaxLength="50" />
+          <Property Name="status" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="sysdiagrams">
           <Key>
@@ -57,9 +58,9 @@
           <Key>
             <PropertyRef Name="nazwa" />
           </Key>
-          <Property Name="nazwa" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="kraj" Type="varchar" MaxLength="50" />
-          <Property Name="miasto" Type="varchar" MaxLength="50" />
+          <Property Name="nazwa" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="kraj" Type="nvarchar" MaxLength="50" />
+          <Property Name="miasto" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="wypozyczenia">
           <Key>
@@ -71,7 +72,7 @@
           <Property Name="data_zamowienia" Type="date" />
           <Property Name="data_wypozyczenia" Type="date" />
           <Property Name="data_zwrotu" Type="date" />
-          <Property Name="status" Type="varchar" MaxLength="50" />
+          <Property Name="status" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <Association Name="FK_ksiazki_autorzy">
           <End Role="autorzy" Type="Self.autorzy" Multiplicity="0..1" />
@@ -162,8 +163,7 @@
             <End Role="wypozyczenia" EntitySet="wypozyczenia" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="bibliotekaModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -172,9 +172,9 @@
             <PropertyRef Name="id_autora" />
           </Key>
           <Property Name="id_autora" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="imie" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="nazwisko" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="narodowosc" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="imie" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="nazwisko" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="narodowosc" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="liczba_dziel" Type="Int32" />
           <Property Name="zyciorys" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="ksiazki" Relationship="Self.FK_ksiazki_autorzy" FromRole="autorzy" ToRole="ksiazki" />
@@ -184,10 +184,10 @@
             <PropertyRef Name="id_czytelnika" />
           </Key>
           <Property Name="id_czytelnika" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="imie" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="nazwisko" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="miastso" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ulica" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="imie" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="nazwisko" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="miastso" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ulica" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="liczba_ksiazek" Type="Int32" />
           <NavigationProperty Name="wypozyczenia" Relationship="Self.FK_wypozyczenia_czytelnicy" FromRole="czytelnicy" ToRole="wypozyczenia" />
         </EntityType>
@@ -195,7 +195,7 @@
           <Key>
             <PropertyRef Name="nazwa" />
           </Key>
-          <Property Name="nazwa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="nazwa" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="ksiazki" Relationship="Self.FK_ksiazki_gatunki" FromRole="gatunki" ToRole="ksiazki" />
         </EntityType>
         <EntityType Name="ksiazki">
@@ -204,13 +204,14 @@
           </Key>
           <Property Name="id_ksiazki" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="id_autora" Type="Int32" />
-          <Property Name="wydawnictwo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="gatunek" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="tytul" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="wydawnictwo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="gatunek" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="tytul" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="autorzy" Relationship="Self.FK_ksiazki_autorzy" FromRole="ksiazki" ToRole="autorzy" />
           <NavigationProperty Name="gatunki" Relationship="Self.FK_ksiazki_gatunki" FromRole="ksiazki" ToRole="gatunki" />
           <NavigationProperty Name="wydawnictwa" Relationship="Self.FK_ksiazki_wydawnictwa" FromRole="ksiazki" ToRole="wydawnictwa" />
           <NavigationProperty Name="wypozyczenia" Relationship="Self.FK_wypozyczenia_ksiazki" FromRole="ksiazki" ToRole="wypozyczenia" />
+          <Property Name="status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="sysdiagrams">
           <Key>
@@ -226,9 +227,9 @@
           <Key>
             <PropertyRef Name="nazwa" />
           </Key>
-          <Property Name="nazwa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="kraj" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="miasto" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="nazwa" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="kraj" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="miasto" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="ksiazki" Relationship="Self.FK_ksiazki_wydawnictwa" FromRole="wydawnictwa" ToRole="ksiazki" />
         </EntityType>
         <EntityType Name="wypozyczenia">
@@ -241,7 +242,7 @@
           <Property Name="data_zamowienia" Type="DateTime" Precision="0" />
           <Property Name="data_wypozyczenia" Type="DateTime" Precision="0" />
           <Property Name="data_zwrotu" Type="DateTime" Precision="0" />
-          <Property Name="status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="czytelnicy" Relationship="Self.FK_wypozyczenia_czytelnicy" FromRole="wypozyczenia" ToRole="czytelnicy" />
           <NavigationProperty Name="ksiazki" Relationship="Self.FK_wypozyczenia_ksiazki" FromRole="wypozyczenia" ToRole="ksiazki" />
         </EntityType>
@@ -374,6 +375,7 @@
           <EntitySetMapping Name="ksiazki">
             <EntityTypeMapping TypeName="bibliotekaModel.ksiazki">
               <MappingFragment StoreEntitySet="ksiazki">
+                <ScalarProperty Name="status" ColumnName="status" />
                 <ScalarProperty Name="id_ksiazki" ColumnName="id_ksiazki" />
                 <ScalarProperty Name="id_autora" ColumnName="id_autora" />
                 <ScalarProperty Name="wydawnictwo" ColumnName="wydawnictwo" />

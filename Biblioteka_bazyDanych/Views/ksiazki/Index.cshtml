@@ -63,6 +63,14 @@
                     search = Request.QueryString["search"]
                 })
         </th>
+        <th>
+            @Html.ActionLink("Status", "Index", new
+                {
+                    sort = ViewBag.SortByStatus,
+                    option = Request.QueryString["option"],
+                    search = Request.QueryString["search"]
+                })
+        </th>
         <th></th>
     </tr>
 
@@ -93,6 +101,9 @@
                 </td>
                 <td>
                     @Html.ActionLink(item.wydawnictwo, "Details", "autorzy", new { id = item.wydawnictwo }, null)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.status)
                 </td>
                 <td>
                     @Html.ActionLink("Edit", "Edit", new { id = item.id_ksiazki }) |

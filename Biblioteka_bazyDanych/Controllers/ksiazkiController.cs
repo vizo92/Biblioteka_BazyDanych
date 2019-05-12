@@ -37,6 +37,7 @@ namespace Biblioteka_bazyDanych.Controllers
             ViewBag.SortByAuthor = sort == "Autor" ? "descending autor" : "Autor";
             ViewBag.SortByKind = sort == "Gatunek" ? "descending gatunek" : "Gatunek";
             ViewBag.SortByPress = sort == "Wydawnictwo" ? "descending wydawnictwo" : "Wydawnictwo";
+            ViewBag.SortByStatus = sort == "Status" ? "descending status" : "Status";
 
             //here we are converting the db.autorzy to AsQueryable so that we can invoke all the extension methods on variable records.  
             var records = db.ksiazki.Include(k => k.autorzy).Include(k => k.gatunki).Include(k => k.wydawnictwa).AsQueryable();
@@ -95,6 +96,13 @@ namespace Biblioteka_bazyDanych.Controllers
                 case "Wydawnictwo":
                     records = records.OrderBy(x => x.wydawnictwo);
                     break;
+                case "descending status":
+                    records = records.OrderByDescending(x => x.status);
+                    break;
+
+                case "Status":
+                    records = records.OrderBy(x => x.status);
+                    break;
                 default:
                     records = records.OrderBy(x => x.id_ksiazki);
                     break;
@@ -140,10 +148,11 @@ namespace Biblioteka_bazyDanych.Controllers
         // Aby uzyskać więcej szczegółów, zobacz https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "id_ksiazki,id_autora,wydawnictwo,gatunek,tytul")] ksiazki ksiazki)
+        public ActionResult Create([Bind(Include = "id_ksiazki,id_autora,wydawnictwo,gatunek,tytul,status")] ksiazki ksiazki)
         {
             if (ModelState.IsValid)
             {
+                ksiazki.status = "Dostępna";   
                 db.ksiazki.Add(ksiazki);
                 UpdateBooksCount(ksiazki.id_autora);
                 db.SaveChanges();
@@ -181,7 +190,7 @@ namespace Biblioteka_bazyDanych.Controllers
         // Aby uzyskać więcej szczegółów, zobacz https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "id_ksiazki,id_autora,wydawnictwo,gatunek,tytul")] ksiazki ksiazki)
+        public ActionResult Edit([Bind(Include = "id_ksiazki,id_autora,wydawnictwo,gatunek,tytul,status")] ksiazki ksiazki)
         {
 
             if (ModelState.IsValid)

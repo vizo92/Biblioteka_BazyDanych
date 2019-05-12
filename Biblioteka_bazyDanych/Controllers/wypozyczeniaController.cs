@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -167,9 +168,45 @@ namespace Biblioteka_bazyDanych.Controllers
                  new SelectListItem{ Value="Zwrócone",Text="Zwrócone"},
              };
             statusList = data.ToList();
+            List<ksiazki> notReserved = new List<ksiazki>();
+            notReserved = db.ksiazki.Where(x => x.status == "Dostępna" & x.status != "Zarezerwowana" || x.status == null).ToList();
+            var wypozyczenia = db.wypozyczenia.Where(x => x.status == "Zarezerwowane");
 
             ViewBag.id_czytelnika = items;
-            ViewBag.id_ksiazki = new SelectList(db.ksiazki, "id_ksiazki", "tytul");
+            ViewBag.id_ksiazki = new SelectList(notReserved, "id_ksiazki", "tytul");
+            ViewBag.status = statusList;
+            return View();
+        }
+
+        public ActionResult Create2()
+        {
+            IEnumerable<SelectListItem> items = db.czytelnicy.Select(c => new SelectListItem
+            {
+                Value = c.id_czytelnika.ToString(),
+                Text = c.imie + " " + c.nazwisko
+
+            });
+
+            List<SelectListItem> statusList = new List<SelectListItem>();
+            var data = new[]{
+                 new SelectListItem{ Value="Zarezerwowane",Text="Zarezerwowane"},
+            };
+            statusList = data.ToList();
+            var q = db.ksiazki.Where(x => x.status == "Wypożyczona" || x.status == "Zarezerwowana").Select(x => x.id_ksiazki);
+            IEnumerable<SelectListItem> items2 = db.ksiazki.Join(db.wypozyczenia,
+                k => k.id_ksiazki, 
+                w => w.id_ksiazki, 
+                (k, w) => new { ksiazki = k, wypozyczenia = w })
+                .Where(k_w => k_w.ksiazki.id_ksiazki == k_w.wypozyczenia.id_ksiazki)
+                .Select(c => new SelectListItem
+                {
+                    Value = c.ksiazki.id_ksiazki.ToString(),
+                    Text = c.ksiazki.tytul + " | Data ostatniego zamówienia: "+ c.wypozyczenia.data_zamowienia
+                });
+            var notReserved = db.ksiazki.Where(x => x.status == "Wypożyczona" || x.status == "Zarezerwowana");
+
+            ViewBag.id_czytelnika = items;
+            ViewBag.id_ksiazki = items2;// new SelectList(notReserved, "id_ksiazki", "tytul");
             ViewBag.status = statusList;
             return View();
         }
@@ -181,18 +218,56 @@ namespace Biblioteka_bazyDanych.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "id_wypozyczenia,id_czytelnika,id_ksiazki,data_zamowienia,data_wypozyczenia,data_zwrotu,status")] wypozyczenia wypozyczenia)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid & wypozyczenia.data_zamowienia > db.wypozyczenia.Where(x => x.id_ksiazki == wypozyczenia.id_ksiazki).OrderByDescending(x => x.data_zamowienia).FirstOrDefault().data_zamowienia.AddDays(30))
             {
                 db.wypozyczenia.Add(wypozyczenia);
+                var ksiazka = db.ksiazki.Where(x => x.id_ksiazki == wypozyczenia.id_ksiazki).FirstOrDefault();
+                switch (wypozyczenia.status)
+                {
+                    case "Zarezerwowane":
+                        if (ksiazka.status == "Wypożyczona") break;
+                        ksiazka.status = "Zarezerwowana";
+                        break;
+                    case "Wypożyczone":
+                        ksiazka.status = "Wypożyczona";
+                        break;
+                    case "Zwrócone":
+                        ksiazka.status = "Dostępna";
+                        break;
+                }
                 var addBook = db.czytelnicy.Where(x => x.id_czytelnika == wypozyczenia.id_czytelnika).FirstOrDefault();
                 addBook.liczba_ksiazek = db.wypozyczenia.Where(x => x.id_czytelnika == addBook.id_czytelnika).Where(x=> x.status == "Wypozyczone").Select(x => x.id_wypozyczenia).Count();
                 db.Entry(addBook).State = EntityState.Modified;
+                db.Entry(ksiazka).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
             ViewBag.id_czytelnika = new SelectList(db.czytelnicy, "id_czytelnika", "imie", wypozyczenia.id_czytelnika);
-            ViewBag.id_ksiazki = new SelectList(db.ksiazki, "id_ksiazki", "wydawnictwo", wypozyczenia.id_ksiazki);
+            ViewBag.id_ksiazki = new SelectList(db.ksiazki, "id_ksiazki", "tytul", wypozyczenia.id_ksiazki);
+            return View(wypozyczenia);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create2([Bind(Include = "id_wypozyczenia,id_czytelnika,id_ksiazki,data_zamowienia,data_wypozyczenia,data_zwrotu,status")] wypozyczenia wypozyczenia)
+        {
+            if (ModelState.IsValid & wypozyczenia.data_zamowienia > db.wypozyczenia.Where(x => x.id_ksiazki == wypozyczenia.id_ksiazki).OrderByDescending(x => x.data_zamowienia).FirstOrDefault().data_zamowienia.AddDays(30))
+            {
+                db.wypozyczenia.Add(wypozyczenia);
+                var ksiazka = db.ksiazki.Where(x => x.id_ksiazki == wypozyczenia.id_ksiazki).FirstOrDefault();
+                if (ksiazka.status != "Wypożyczona") ksiazka.status = "Zarezerwowana";
+
+
+                var addBook = db.czytelnicy.Where(x => x.id_czytelnika == wypozyczenia.id_czytelnika).FirstOrDefault();
+                addBook.liczba_ksiazek = db.wypozyczenia.Where(x => x.id_czytelnika == addBook.id_czytelnika).Where(x => x.status == "Wypozyczone").Select(x => x.id_wypozyczenia).Count();
+                db.Entry(addBook).State = EntityState.Modified;
+                db.Entry(ksiazka).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+            ViewBag.id_czytelnika = new SelectList(db.czytelnicy, "id_czytelnika", "imie", wypozyczenia.id_czytelnika);
+            ViewBag.id_ksiazki = new SelectList(db.ksiazki, "id_ksiazki", "tytul", wypozyczenia.id_ksiazki);
             return View(wypozyczenia);
         }
 
@@ -231,6 +306,20 @@ namespace Biblioteka_bazyDanych.Controllers
         {
             if (ModelState.IsValid)
             {
+                var ksiazka = db.ksiazki.Where(x => x.id_ksiazki == wypozyczenia.id_ksiazki).FirstOrDefault();
+                switch (wypozyczenia.status)
+                {
+                    case "Zarezerwowane":
+                        ksiazka.status = "Zarezerwowana";
+                        break;
+                    case "Wypożyczone":
+                        ksiazka.status = "Wypożyczona";
+                        break;
+                    case "Zwrócone":
+                        ksiazka.status = "Dostępna";
+                        break;
+                }
+                db.Entry(ksiazka).State = EntityState.Modified;
                 db.Entry(wypozyczenia).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -261,6 +350,9 @@ namespace Biblioteka_bazyDanych.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             wypozyczenia wypozyczenia = db.wypozyczenia.Find(id);
+            var ksiazka = db.ksiazki.Where(x => x.id_ksiazki == wypozyczenia.id_ksiazki).FirstOrDefault();
+            ksiazka.status = "Dostępna";
+            db.Entry(ksiazka).State = EntityState.Modified;
             db.wypozyczenia.Remove(wypozyczenia);
             db.SaveChanges();
             return RedirectToAction("Index");
@@ -273,6 +365,11 @@ namespace Biblioteka_bazyDanych.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        public DateTime returnDate(wypozyczenia model)
+        {
+            return db.wypozyczenia.Where(x => x.id_ksiazki == model.id_ksiazki).OrderByDescending(x => x.data_zamowienia).FirstOrDefault().data_zamowienia.AddDays(30);
         }
     }
 }
